@@ -4,6 +4,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -11,6 +12,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "incremental": true,
     "plugins": [
       {
@@ -18,7 +25,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@auth": ["./auth"],
+      "@models": ["./src/models"],
+      "@utils": ["./src/utils"],
+      "@ui": ["./src/ui/general"],
+      "@com": ["./src/components"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
