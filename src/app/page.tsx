@@ -13,33 +13,59 @@
 // import moment from "moment";
 
 import CTA from "../components/home/CTA";
-import {IdeaForm, IdeaSlider, LatestIdeas, LatestUsers, ProblemForm} from "@com";
+import {IdeaForm, IdeaSlider} from "@com";
+import {dbConnect} from "@db";
+import {auth} from "@auth";
 
-export default function Home() {
-  return (
-      <>
-          <CTA shouldExplore={latest?.length > 0} />
-          {latest?.length > 0 && <IdeaSlider latest={latest} />}
-          <IdeaForm />
+export default async function Home() {
+    async function getData() {
+        "use server";
+        // const res = await fetch('/api/home')
+        const session = await auth();
+        try {
+            await dbConnect();
+            console.log("session", session);
+            return [];
+            // const latestQuery = session ? {raters: {$not: {$elemMatch: {$eq: session.user?.id}}}} : {};
 
-          <div className={" py-20 text-center "} style={{backgroundImage: "url(/homepage.png)", backgroundSize: "50%"}}>
-              <div className="container">
-                  <main>
-                      <p className={"text-primary font-sanse"} h2>
-                          You have no idea?
-                      </p>
-                      <p className={"text-2xl "}>
-                          Do not worry! You tell us what <span className="text-red-500">problem</span> in life you have and we will try to find a{" "}
-                          <span className={"text-primary"}>solution</span> for it!{" "}
-                      </p>
-                  </main>
-              </div>
-          </div>
-          <ProblemForm />
-          <LatestIdeas topLastMonth={topLastMonth} countLastMonth={countLastMonth} />
-          <LatestUsers topEnt={topEnt} countTopEnt={countTopEnt} />
-      </>
-  );
+            // return Idea.find(latestQuery, "title author description tags")
+            //     .populate({
+            //         path: "author",
+            //         model: User,
+            //     })
+            //     .sort({createdAt: -1})
+            //     .limit(50);
+        } catch (e) {
+            console.log(e, "Error");
+            return [];
+        }
+    }
+
+    const latest = await getData();
+    return (
+        <>
+            <CTA shouldExplore={latest?.length > 0} />
+            {latest?.length > 0 && <IdeaSlider latest={latest} />}
+            <IdeaForm />
+
+            {/*<div className={" py-20 text-center "} style={{backgroundImage: "url(/homepage.png)", backgroundSize: "50%"}}>*/}
+            {/*    <div className="container">*/}
+            {/*        <main>*/}
+            {/*            <p className={"text-primary font-sanse"} h2>*/}
+            {/*                You have no idea?*/}
+            {/*            </p>*/}
+            {/*            <p className={"text-2xl "}>*/}
+            {/*                Do not worry! You tell us what <span className="text-red-500">problem</span> in life you have and we will try to find a{" "}*/}
+            {/*                <span className={"text-primary"}>solution</span> for it!{" "}*/}
+            {/*            </p>*/}
+            {/*        </main>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+            {/*<ProblemForm />*/}
+            {/*<LatestIdeas topLastMonth={topLastMonth} countLastMonth={countLastMonth} />*/}
+            {/*<LatestUsers topEnt={topEnt} countTopEnt={countTopEnt} />*/}
+        </>
+    );
 }
 //
 // export async function getServerSideProps({params, req}) {
@@ -58,7 +84,7 @@ export default function Home() {
 //         .sort({createdAt: -1})
 //         .limit(50);
 //     // const topQuery = ;
-//     // todo get count all last month
+//     //
 //     //? get count last month
 //     const clmquery = {createdAt: {$gte: moment().subtract(1, "months").format()}};
 //     countLastMonth = await Idea.find(clmquery).count();

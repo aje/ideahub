@@ -1,19 +1,19 @@
 "use client";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {Button, Popover, PopoverContent, PopoverTrigger} from "@nextui-org/react";
 import {Login} from "@styled-icons/entypo"
 import {Github, Google} from "@styled-icons/remix-line"
 import {signIn} from "next-auth/react";
 import {NavbarItem} from "@nextui-org/navbar";
+import {DialogContext} from "../../app/providers";
 
 const LoginPopover = () => {
-	const [loading, setLoading] = useState(false);
-	// const [more, setMore] = useState(false);
-	// const state = useHookstate(loginPopper); // fixme context
+	const [loading, setLoading] = useState<string>();
+	const {dialogs, toggleDialog} = useContext(DialogContext)
 
 	const onSocial = provider => () => {
 		setLoading(provider);
-		signIn(provider).then(r => setLoading(false));
+		signIn(provider).then(r => setLoading(undefined));
 	};
 
 	return (
@@ -23,8 +23,9 @@ const LoginPopover = () => {
 			{/*    Register as Guest*/}
 			{/*</Navbar.Link>*/}
 			<Popover
-				// isOpen={state.get()}
-				// onOpenChange={state.set}
+				showArrow={true}
+				isOpen={dialogs.has("login")}
+				onOpenChange={toggleDialog("login")}
 			>
 				<PopoverTrigger>
 					<NavbarItem>

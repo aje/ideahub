@@ -1,13 +1,12 @@
-import {model, Schema} from "mongoose";
+import {model, models, Schema} from "mongoose";
 
 export enum Role {
-    ENTREPRENEUR = 'ENTREPRENEUR',
-    ADMIN = 'ADMIN',
-    USER = 'USER',
-    CRITIC = 'CRITIC',
+    ADMIN = "ADMIN",
+    USER = "USER",
 }
 
-export interface User extends Document {
+export interface UserType extends Document {
+    id: string;
     name: string;
     email?: string; // Optional email property
     avatar?: string; // Optional avatar property
@@ -17,22 +16,25 @@ export interface User extends Document {
     role: Role;
 }
 
-export const UserSchema = new Schema<User>({
-    name: { type: String, required: true},
-    email: String,
-    avatar: String,
-    bio: String,
-    password: String,
-    postCount: Number,
-    role: {
-        type: String,
-        enum: Role
+export const UserSchema = new Schema<UserType>(
+    {
+        name: {type: String, required: true},
+        email: String,
+        avatar: String,
+        bio: String,
+        password: String,
+        postCount: Number,
+        role: {
+            type: String,
+            enum: Role,
+        },
     },
-},{
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
-});
+    {
+        toJSON: {virtuals: true},
+        toObject: {virtuals: true},
+    }
+);
 
-// export const  User = models.User || model('User', UserSchema);
-export const  User = model('User', UserSchema);
+export const User = models.User || model("User", UserSchema);
+// export const User = model("User", UserSchema);
 // export default User;

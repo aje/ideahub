@@ -2,8 +2,7 @@ import * as models from "@models";
 import {dbConnect} from "@utils";
 import {createEdgeRouter} from "next-connect";
 import {NextRequest, NextResponse} from "next/server";
-
-import {auth} from "@auth"
+import {auth} from "@auth";
 // import { authOptions } from "./auth/[...nextauth]"
 // const apiRoute = nextConnect({
 //     onError(error, req, res) {
@@ -21,34 +20,36 @@ interface RequestContext {
 
 const router = createEdgeRouter<NextRequest, RequestContext>();
 
-router.use(async (req, res, next) => {
-    const start = Date.now();
-    await next(); // call next in chain
-    const end = Date.now();
-    console.log(`Request took ${end - start}ms`);
-}).post(async (req, res) => {
-    const session = await auth()
-    try {
-        if(session) {
-            await dbConnect();
-            const comment = {...req.body, author: session.user}
-            const result = await models.Comment.create(comment);
-            // res.status(201).json(result);
-            return NextResponse.json({ result });
+router
+    .use(async (req, res, next) => {
+        const start = Date.now();
+        await next(); // call next in chain
+        const end = Date.now();
+        console.log(`Request took ${end - start}ms`);
+    })
+    .post(async (req) => {
+        const session = await auth();
+        try {
+            if (session) {
+                await dbConnect();
+                const comment = {...req.body, author: session.user};
+                const result = await models.Comment.create(comment);
+                // res.status(201).json(result);
+                return NextResponse.json({result});
+            }
+        } catch (error) {
+            return NextResponse.json(error);
+            // res.status(400).json(error);
         }
-    } catch (error) {
-        return NextResponse.json(error);
-        // res.status(400).json(error);
-    }
-    return NextResponse.json({});
-    // res.end()
-})
+        return NextResponse.json({});
+        // res.end()
+    });
 //     .delete(async (req, res) => {
 //     await dbConnect();
 //     const session = await getSession({ req });
 //     try {
 //         if(session) {
-//             // todo find by id and author
+//             //
 //             const deleted = await models.Comment.findByIdAndDelete(req.query.id);
 //             res.status(200).json(deleted);
 //         }

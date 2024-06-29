@@ -3,12 +3,14 @@ import {Badge} from "@nextui-org/react";
 import {Notification} from "@styled-icons/remix-line";
 import useSWR from "swr";
 import {NavbarItem} from "@nextui-org/navbar";
+import {useContext} from "react";
+import {DialogContext} from "../../app/providers";
 
 const NotificationButton = () => {
-	// const state = useHookstate(notificationState); // fixme context
+	const { addDialog} = useContext(DialogContext)
 	const {data} = useSWR(`/stats`);
 	const onOpen = () => {
-		// state.set(true);
+		addDialog("notification")
 		document.body.style.overflow = "hidden";
 	};
 	return (

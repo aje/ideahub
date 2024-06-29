@@ -28,8 +28,10 @@
       "@auth": ["./auth"],
       "@models": ["./src/models"],
       "@utils": ["./src/utils"],
+      "@db": ["./src/utils/db"],
       "@ui": ["./src/ui/general"],
-      "@com": ["./src/components"]
+      "@com": ["./src/components"],
+      "@styles": ["./src/styles"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

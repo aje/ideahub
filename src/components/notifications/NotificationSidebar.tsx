@@ -4,6 +4,8 @@ import useSWR from "swr";
 import CommentItem from "../idea/CommentItem";
 import RateItem from "./RateItem";
 import {Empty, Loading} from "@ui"
+import {useContext} from "react";
+import {DialogContext} from "../../app/providers";
 
 
 const mapToItem = {
@@ -13,15 +15,15 @@ const mapToItem = {
 };
 
 const NotificationSidebar = () => {
-	// const state = useHookstate(notificationState); // fixme context
-	const {data: notif, error} = useSWR("/notifications");
+	const {dialogs, removeDialog} = useContext(DialogContext)
+	const {data: notif, error, isLoading} = useSWR("/notifications");
 	const onClose = () => {
-		// state.set(false);
+		removeDialog('notification')
 		document.body.style.overflow = "auto";
 	};
 
-	// if (!data && !error) return <Loading />;
-
+	if(!dialogs.has("notification")) return <></>
+	if (!notif  || isLoading) return <Loading />;
 	return (
 		<>
 			<div
@@ -30,7 +32,6 @@ const NotificationSidebar = () => {
 				className={" bg-white/30 w-screen h-screen fixed top-0 left-0"}
 			/>
 			<Card
-				// css={{borderRadius: 0}}
 				style={{zIndex: 400}}
 				className="fadeInAnimated overflow-y-scroll bg-white h-screen  w-2/3 md:w-1/3 fixed top-0 right-0">
 				<div className="flex justify-between items-center px-3 pt-3">
